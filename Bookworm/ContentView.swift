@@ -10,9 +10,23 @@ import CoreData
 
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var moc
+    @FetchRequest(entity: Book.entity(), sortDescriptors: []) var books: FetchedResults<Book>
+    @State private var showingAddScreen = false
 
     var body: some View {
-        Text("Hello World")
+        NavigationView {
+            Text("Count: \(books.count)")
+                .navigationBarTitle("Bookworm")
+                .navigationBarItems(trailing: Button(action: {
+                    self.showingAddScreen.toggle()
+                }) {
+                    Image(systemName: "plus")
+                })
+                .sheet(isPresented: $showingAddScreen, content: {
+                    // Use environment modifier to allow writing to environment
+                    AddBookView().environment(\.managedObjectContext, self.moc)
+                })
+        }
     }
 }
 
