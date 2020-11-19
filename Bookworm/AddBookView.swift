@@ -15,6 +15,7 @@ struct AddBookView: View {
     @State private var rating = 3
     @State private var genre = ""
     @State private var review = ""
+    @State private var showAlert = false
     
     let genres = ["Fantasy", "Horror", "Kids", "Mystery", "Poetry", "Romance", "Thriller"]
     
@@ -39,6 +40,11 @@ struct AddBookView: View {
                 
                 Section {
                     Button("Save") {
+                        guard genre.isEmpty == false else {
+                            showAlert.toggle()
+                            return
+                        }
+                        
                         let newBook = Book(context: self.moc)
                         newBook.title = self.title
                         newBook.author = self.author
@@ -53,6 +59,9 @@ struct AddBookView: View {
            
             }
             .navigationBarTitle("Add Book")
+            .alert(isPresented: $showAlert) {
+                Alert(title: Text("Error"), message: Text("You must select a Genre"), dismissButton: .default(Text("OK")))
+            }
         }
     }
 }
