@@ -43,6 +43,10 @@ struct DetailView: View {
                     .font(.largeTitle)
                 
                 Spacer()
+                
+                Text("Added: \(formatDate(date: self.book.date))")
+                    .padding()
+                    .font(.footnote)
             }
         }
         .navigationBarTitle(Text(book.title ?? "Unknown Book"), displayMode: .inline)
@@ -65,6 +69,16 @@ struct DetailView: View {
         try? self.moc.save()
         presentationMode.wrappedValue.dismiss()
     }
+    
+    func formatDate(date: Date?) -> String {
+        guard let date = date else {
+            return "Date Unavailable"
+        }
+        let formatter = DateFormatter()
+        formatter.dateStyle = .long
+        return formatter.string(from: date)
+
+    }
 }
 
 struct DetailView_Previews: PreviewProvider {
@@ -79,6 +93,7 @@ struct DetailView_Previews: PreviewProvider {
         book.genre = "Fantasy"
         book.rating = 4
         book.review = "This was a great book; I really enjoyed it."
+        book.date = Date()
         
         return NavigationView {
             DetailView(book: book)
